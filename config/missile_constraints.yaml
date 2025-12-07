@@ -1,0 +1,114 @@
+# ==============================================================================
+# MISSILE OPTIMIZATION CONFIGURATION (REALISTIC & SAFE DESIGN - HPR CLASS K/L)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. SEARCH SPACE (DESIGN VARIABLES)
+# Ranges defined to ensure physical feasibility, structural integrity, 
+# and accommodation of standard HPR motors.
+# ------------------------------------------------------------------------------
+design_variables:
+  # --- Fuselage Geometry ---
+  radius:
+    min: 0.060   # 120mm: Minimum to house 98mm motors + avionics bay
+    max: 0.100   # 200mm: Maximum reasonable diameter for manageable handling
+    description: "External fuselage radius"
+  
+  body_length:
+    min: 1.20    # Minimum length required for recovery system packing
+    max: 2.40    # Limited to ensure structural rigidity and transportability
+    description: "Main body tube length"
+  
+  nose_length:
+    min: 0.40
+    max: 0.80    # Standard commercial nose cones ratios (3:1 to 5:1)
+    description: "Nose cone length"
+
+  # --- Fin Geometry ---
+  fin_span:
+    min: 0.10
+    max: 0.25    # Limited max span to avoid structural flutter/fragility
+    description: "Fin span (height from body)"
+  
+  fin_root_chord:
+    min: 0.20
+    max: 0.50
+    description: "Fin root chord length"
+  
+  fin_tip_chord:
+    min: 0.05
+    max: 0.25
+    description: "Fin tip chord length"
+  
+  fin_sweep_angle:
+    min: 10.0
+    max: 45.0    # Sweep >45 deg may lead to structural divergence issues
+    description: "Fin leading edge sweep angle"
+  
+  fin_distance_from_base:
+    min: 0.00
+    max: 0.05    # Fins constrained near the aft for maximum static margin efficiency
+    description: "Distance from rocket base"
+
+  # --- Propulsion (Synthetic Motor) ---
+  total_impulse:
+    min: 2000.0  # Full Class K
+    max: 5000.0  # Class M
+    description: "Total motor impulse"
+  
+  burn_time:
+    min: 2.0     # Lower limit to avoid unrealistic high-G acceleration
+    max: 6.0     # Typical upper limit for commercial motors in this class
+    description: "Propellant burn duration"
+
+  # --- Launch Parameters ---
+  launch_angle:
+    min: 75.0    # Below 75 deg creates range safety issues
+    max: 88.0    # Upper limit to avoid singularities near 90 deg
+    description: "Rail inclination angle"
+
+# ------------------------------------------------------------------------------
+# 2. GOLDEN ROCKET (GROUND TRUTH)
+# Reference design used to generate the target trajectory data.
+# ------------------------------------------------------------------------------
+golden_rocket:
+  radius: 0.065
+  body_length: 2.10
+  nose_length: 0.65
+  fin_span: 0.18
+  fin_root_chord: 0.35
+  fin_tip_chord: 0.12
+  fin_sweep_angle: 30.0
+  fin_distance_from_base: 0.0
+  total_impulse: 3200.0
+  burn_time: 4.5
+  launch_angle: 85.0   
+
+# ------------------------------------------------------------------------------
+# 3. OPTIMIZATION OBJECTIVES (TARGETS)
+# Derived from Golden Rocket simulations.
+# ------------------------------------------------------------------------------
+
+# TASK A: SINGLE TRAJECTORY (Uses Scenario 1 - 85 deg)
+single_trajectory_target:
+  range: 615.6093
+  apogee: 1322.3384
+  flight_time: 35.6024
+  burn_time: 4.5000
+  weights:
+    range: 10.0
+    apogee: 10.0
+    flight_time: 1.0
+    burn_time: 1.0
+
+# TASK B: TRIPLE TRAJECTORY (MULTI-OBJECTIVE)
+multi_trajectory_scenarios:
+  scenario_1:
+    fixed_launch_angle: 85.0
+    target: {range: 615.6, apogee: 1322.3, flight_time: 35.6, burn_time: 4.5}
+  scenario_2:
+    fixed_launch_angle: 80.0
+    target: {range: 1189.9, apogee: 1257.5, flight_time: 34.8, burn_time: 4.5}
+  scenario_3:
+    fixed_launch_angle: 75.0
+    target: {range: 1666.5, apogee: 1156.0, flight_time: 33.5, burn_time: 4.5}

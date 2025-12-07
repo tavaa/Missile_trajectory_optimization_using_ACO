@@ -1,0 +1,80 @@
+# ==============================================================================
+# OPTIMIZATION ALGORITHM CONFIGURATION (ACO-R, LOCAL SEARCH, GA)
+# Reference: Kiyak et al., "Missile Trajectory Optimization Using a Modified ACO"
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. GLOBAL CONSTRAINTS (COMPUTATIONAL BUDGET)
+# ------------------------------------------------------------------------------
+general:
+  # Maximum number of objective function evaluations allowed.
+  # This ensures a fair comparison between algorithms with different internal structures.
+  max_function_calls: 4000   # Seed for the random number generator to ensure result reproducibility.
+  random_seed: 42             
+
+# ------------------------------------------------------------------------------
+# 2. ANT COLONY OPTIMIZATION (ACO-R)
+# Parameters for the continuous domain version of ACO.
+# ------------------------------------------------------------------------------
+aco:
+  # (k) Size of the solution archive (number of ants stored).
+  archive_size: 50       
+  # (m) Number of new ants (solutions) generated per iteration.
+  new_solutions: 2       
+  
+  # --- Gaussian Kernel Parameters ---
+  # (q) Weighting parameter affecting the probability of selecting the best solutions.
+  # Lower values (< 0.1) result in a "greedier" (elitist) search; higher values favor uniformity.
+  # Range: [0.01, 1.0]
+  q_weight: 0.1          
+  
+  # (zeta) Pheromone evaporation rate / Convergence speed.
+  # Controls the width of the Gaussian functions.
+  # > 1.0: High exploration (slower convergence).
+  # < 0.5: Rapid convergence (risk of local optima).
+  zeta: 0.85             
+  
+  # --- Paper-Specific Modification ---
+  # (q_mod) Extra Elitism Probability.
+  # Probability [0.0 - 1.0] that a new ant will sample strictly around the 
+  # current Best-So-Far solution, ignoring the roulette wheel selection.
+  q_mod_elitism: 0.3     
+  
+  # --- Mini-Cycles Strategy ---
+  # Mechanism to restart the archive to escape local minima upon stagnation.
+  mini_cycles:
+    enabled: true
+    # Number of consecutive iterations without fitness improvement required to trigger a reset.
+    stagnation_limit: 50 
+    # If true, the global best solution is preserved during the archive reset.
+    keep_best: true      
+
+# ------------------------------------------------------------------------------
+# 3. LOCAL SEARCH (NELDER-MEAD SIMPLEX)
+# ------------------------------------------------------------------------------
+local_search:
+  algorithm: "Nelder-Mead"
+  
+  # Maximum function call budget for a single execution of the Local Search.
+  max_calls: 500         
+  # Convergence threshold; search stops if fitness variance is below this value.
+  tolerance: 1.0e-4      
+  # Initial size of the simplex vertices relative to the variable ranges (e.g., 0.05 = 5%).
+  initial_step: 0.05     
+
+# ------------------------------------------------------------------------------
+# 4. BINARY GENETIC ALGORITHM (BENCHMARK)
+# Parameters for the comparison algorithm.
+# ------------------------------------------------------------------------------
+binary_ga:
+  # Total number of individuals in the population.
+  population_size: 50    
+  # Probability of bit-flip mutation occurring per bit.
+  mutation_rate: 0.02    
+  # Probability of crossover occurring between two parents.
+  crossover_rate: 0.8    
+  # Discretization precision for continuous variables.
+  # 16 bits implies 65,536 distinct levels per parameter.
+  bits_per_param: 16     
+  # If true, the best individual is guaranteed to survive to the next generation.
+  elitism: true
