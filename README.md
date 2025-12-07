@@ -187,15 +187,15 @@ The project is organized into Jupyter Notebooks to be run sequentially:
 * Generates the Ground Truth targets for the configuration files.
 
 2. `notebooks/single_trajectory_optimization.ipynb`:
-*Runs ACO-R, ACO-R + Local Search, and Binary GA on Task A.
-*Visualizes convergence and trajectory matching.
+* Runs ACO-R, ACO-R + Local Search, and Binary GA on Task A.
+* Visualizes convergence and trajectory matching.
 
 3. `notebooks/triple_trajectory_optimization.ipynb`:
-*Runs the multi-objective optimization (Task B).
-*Visualizes the compromise solution across the three scenarios.
+* Runs the multi-objective optimization (Task B).
+* Visualizes the compromise solution across the three scenarios.
 
 4. `notebooks/final_results_comparison.ipynb`:
-*Aggregates data and produces final statistical tables and plots.
+* Aggregates data and produces final statistical tables and plots.
 
 
 ## Key Implementation Details
@@ -277,6 +277,8 @@ Matteo Tavano
 * GitHub: @tavaa
 
 * Email: matteo.tavano@studenti.units.it
+
+> **Note:** This project was developed with the assistance of **Google Gemini 3.0** acting as an AI copilot, debugger and documentation tool. It represents a simplified replication of a complex aerospace engineering problem, specifically oriented towards adapting and benchmarking evolutionary algorithms for continuous domain optimization.
 
 ## References
 
